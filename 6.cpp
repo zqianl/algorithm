@@ -26,7 +26,6 @@ long long Fibonacci(unsigned int i)
 	return ret;
 }
 
-//ËÙ¶ÈºÜÂı
 //long long Fibonacci(unsigned int i)
 //{
 //	if (i == 1)
