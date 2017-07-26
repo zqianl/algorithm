@@ -14,14 +14,20 @@ struct data{
 	int exponent;
 };
 
-double square(double a)
+double PowerAbs(struct data base_exponent)
 {
-	return a*a;
-}
-
-int multi_2(int a)
-{
-	return 2*a;
+	if (base_exponent.exponent == 0)
+		return 1.0;
+	if (base_exponent.exponent == 1)
+		return base_exponent.base;
+	struct data base_exponent_1;
+	base_exponent_1.base = base_exponent.base;
+	base_exponent_1.exponent = base_exponent.exponent / 2;
+	double result = PowerAbs(base_exponent_1);
+	result *= result;
+	if ((base_exponent.exponent %2) == 1)
+		result *= base_exponent.base;
+	return result;
 }
 
 double calPower(struct data base_exponent)
@@ -33,82 +39,17 @@ double calPower(struct data base_exponent)
 	}
 	else
 	{
-		double power_answer = 1.0;
-		cout.setf(ios::fixed);
-		cout.setf(ios::showpoint);
-		cout.precision(2);
-		vector<int>power_sum;
-		if (base_exponent.exponent == 0)
-			return power_answer;
-		else
+		int flagPosOrNeg = 1;
+		if (base_exponent.exponent < 0)
 		{
-			int flagPosOrNeg = 1;
-			if (base_exponent.exponent < 0)
-			{
-				flagPosOrNeg = -1;
-				base_exponent.exponent = -base_exponent.exponent;
-			}
-			map<int, int>power_2;
-			power_2.insert(pair<int, int>(0,1));
-			int j = 0;
-			int diff = base_exponent.exponent - power_2[j];
-			int p;
-			while (diff > 0)
-			{
-				diff += power_2[j];
-				p = multi_2(power_2[j]);
-				j++;
-				power_2.insert(pair<int, int>{j, p});
-				diff = diff - power_2[j];
-			}
-			if (diff == 0)
-				power_sum.push_back(j);
-			else
-			{
-				j--;
-				power_sum.push_back(j);
-				diff = diff + power_2[j + 1] - power_2[j];
-				while (1)
-				{
-					j--;
-					diff -= power_2[j];
-					if (diff > 0)
-						power_sum.push_back(j);
-					else if (diff == 0)
-					{
-						power_sum.push_back(j);
-						break;
-					}
-					else
-						diff += power_2[j];
-				}
-			}
-			int m = 1;
-			if (*(power_sum.end() - 1) == 0)
-			{
-				power_answer = base_exponent.base;
-				m++;
-			}
-			if (power_sum.size() != 1 || (power_sum.size() == 1 && *(power_sum.end() - 1) != 0))
-			{
-				double result = base_exponent.base;
-				for (int k = 1; k <= *power_sum.begin(); k++)
-				{
-					result = square(result);
-					if (k == *(power_sum.end() - m))
-					{
-						power_answer *= result;
-						m++;
-					}
-				}
-			}
-			power_sum.clear();
-			power_2.clear();
-			if (flagPosOrNeg ==1)
-				return power_answer;
-			else
-				return 1 / power_answer;
+			base_exponent.exponent = -base_exponent.exponent;
+			flagPosOrNeg = -1;
 		}
+		double answer = PowerAbs(base_exponent);
+		if (flagPosOrNeg == -1)
+			return 1 / answer;
+		else
+			return answer;
 	}
 }
 
