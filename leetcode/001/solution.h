@@ -4,12 +4,13 @@
 #include<iostream>
 #include<vector>
 
+template<typename T>
 class Solution{
 public:
-	int singleNumber(std::vector<int>&data, int&num)
+	T singleNumber(std::vector<T>&data, T&num)
 	{
-		int t(0);
-		for (int i = 0; i < num; i++)
+		T t(0);
+		for (T i = 0; i < num; i++)
 		{
 			t ^= *(data.begin() + i);
 		}

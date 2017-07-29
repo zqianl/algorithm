@@ -11,7 +11,7 @@ int main(int argc, char*argv[])
 	cin >> num;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	vector<int>data;
-	Solution s;
+	Solution<int> s;
 	int element;
 	for (int i = 0; i < num; i++)
 	{
