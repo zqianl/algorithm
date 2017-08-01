@@ -33,7 +33,6 @@ int main(int argc,char*argv[])
 		data.push_back(element);
 	}
 	char str[100][10];
-	unsigned int sizeMax = 0;
 	for (int i = 0; i < num; ++i)
 	{
 		sprintf(str[i], "%d", *(data.begin() + i));
