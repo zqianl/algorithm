@@ -10,16 +10,16 @@ namespace cplusplus
 	public:
 		bool findNumber(vector<vector<T>>&matrix, T&target,int &m,int &n)
 		{
-			int low = 0,high=m*n-1,mid = (high + low) >> 1;
+			int low = 0,high=m*n-1;
 			while (low < high)
 			{
+				int mid = (high + low) >> 1;
 				if (matrix[mid / n][mid % n] > target)
 					high = mid;
 				else if (matrix[mid / n][mid % n] < target)
 					low = mid + 1;
 				else
 					return true;
-				mid = (high + low) >> 1;
 			}
 			return matrix[mid / n][mid%n] == target;
 		}
