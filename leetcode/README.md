@@ -5,3 +5,5 @@
 For example,Consider the following matrix:
 	[[1,   3,  5,  7],[10, 11, 16, 20],[23, 30, 34, 50]
 	] Given target = 3, return true.
+4. Given a binary tree, find its maximum depth. The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
