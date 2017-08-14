@@ -1,5 +1,5 @@
-#ifndef SOLUTION10_H
-#define SOLUTION10_H
+#ifndef SOLUTION_H
+#define SOLUTION_H
 
 bool flag = true;
 

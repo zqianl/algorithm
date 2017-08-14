@@ -2,7 +2,7 @@
 #include<vector>
 #include<numeric>
 #include<limits>
-#include"10solution.h"
+#include"9.h"
 
 using namespace std;
 
