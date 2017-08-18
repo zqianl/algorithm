@@ -1,79 +1,66 @@
-#ifndef SOLUTION005_H
-#define SOLUTION005_H
+#ifndef SOLUTION_H
+#define SOLUTION_H
 
-namespace cplusplus{
-	template<typename T>
-	struct TreeNode{
-		T data;
-		TreeNode<T> *  lc;
-		TreeNode<T> *  rc;
-		TreeNode(T x) :data(x), lc(NULL), rc(NULL){}
-	};
+#include<iostream>
+#include<vector>
+#include<limits>
+#include<numeric>
 
-	template<typename T>
-	class BinTree{
-	public:
-		TreeNode<T> *  createBinTree(std::vector<T> data);
-		//{
-		//	vector<TreeNode<T> * >vec;
-		//	for (vector<T>::iterator it = data.begin(); it != data.end(); ++it)
-		//	{
-		//		vec.push_back(new TreeNode<T>(*it));
-		//	}
-		//	for (decltype(vec.size())i = 0, pos = 0; pos != vec.size() - 1; ++i)
-		//	{
-		//		vec[i]->lc = vec[++pos];
-		//		vec[i]->rc = vec[++pos];
-		//	}
-		//	return *vec.begin();
-		//}
-	};
+using namespace std;
 
-	//template<typename T>
-	//TreeNode<T> *  BinTree<T>::createBinTree(std::vector<T> data)
-	//{
-	//	vector<TreeNode<T> * >vec;
-	//	for (vector<T>::iterator it = data.begin(); it != data.end(); ++it)
-	//	{
-	//		vec.push_back(new TreeNode<T>(*it));
-	//	}
-	//	for (decltype(vec.size())i = 0, pos = 0; pos != vec.size() - 1; ++i)
-	//	{
-	//		vec[i]->lc = vec[++pos];
-	//		vec[i]->rc = vec[++pos];
-	//	}
-	//	return *vec.begin();
-	//}
+struct ListNode{
+	int data;
+	ListNode *next;
+	ListNode(int x) :data(x), next(NULL){}
+};
 
-	template<typename T>
-	class Solution{
-	public:
-		bool IsBalanced(TreeNode<T> *  root)
+class Solution{
+public:
+	ListNode *mergeList(ListNode *head1, ListNode *head2)
+	{
+		if (head1 == NULL)
 		{
-			calNodeHeight(root);
-			return balanceOrNot;
+			return head2;
 		}
-	private:
-		int calNodeHeight(TreeNode<T> * node)
+		if (head2 == NULL)
 		{
-			if (node == NULL || !balanceOrNot)
-				return 0;
-			else
-			{
-				int leftHeight = calNodeHeight(node->lc);
-				int rightHeight = calNodeHeight(node->rc);
-				if (std::abs(leftHeight - rightHeight) > 1)
-					balanceOrNot = false;
-				return max(leftHeight, rightHeight) + 1;
-			}	
+			return head1;
 		}
-		bool balanceOrNot = true;
-	};
+		ListNode *mergeHead = NULL;
+		if (head1->data > head2->data)
+		{
+			mergeHead = head2;
+			mergeHead->next = mergeList(head1, head2->next);
+		}
+		else
+		{
+			mergeHead = head1;
+			mergeHead->next = mergeList(head1->next, head2);
+		}
+		return mergeHead;
+	}
+	void printMergeList(ListNode *mergeHead)
+	{
+		ListNode *p = mergeHead;
+		while (p != NULL)
+		{
+			cout << p->data <<" ";
+			p = p->next;
+		}
+	}
+	void destoryMergeList(ListNode *mergeHead)
+	{
+		ListNode *p = mergeHead;
+		ListNode *q = NULL;
+		while (p != NULL)
+		{
+			q = p->next;
+			delete p;
+			p = q;
+		}
+	}
+};
 
-}
+
 
 #endif
-
-
-
-

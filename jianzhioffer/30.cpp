@@ -1,47 +1,33 @@
-#include<iostream>
-#include<algorithm>
-#include<limits>
-#include<numeric>
-
-#include"004.h"
-
-// Create a tree for test
-//            1
-//           / \
-//          2  3
-//         / \  \
-//        4  5  6
-//       / \
-//      7  8
-//        /
-//       9
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include "30.h"
 
 using namespace std;
 
-int main(int argc, char *argv[])
+template<typename T>
+cplusplus::TreeNode<T> *  cplusplus::BinTree<T>::createBinTree(std::vector<T> data)
 {
-	cplusplus::TreeNode<int> root(1);
-	cplusplus::TreeNode<int> t2(2);
-	cplusplus::TreeNode<int> t3(3);
-	cplusplus::TreeNode<int> t4(4);
-	cplusplus::TreeNode<int> t5(5);
-	cplusplus::TreeNode<int> t6(6);
-	cplusplus::TreeNode<int> t7(7);
-	cplusplus::TreeNode<int> t8(8);
-	cplusplus::TreeNode<int> t9(9);
+	vector<TreeNode<T> * >vec;
+	for (vector<T>::iterator it = data.begin(); it != data.end(); ++it)
+	{
+		vec.push_back(new TreeNode<T>(*it));
+	}
+	for (decltype(vec.size())i = 0, pos = 0; pos != vec.size() - 1; ++i)
+	{
+		vec[i]->lc = vec[++pos];
+		vec[i]->rc = vec[++pos];
+	}
+	return *vec.begin();
+}
 
-	root.lc = &t2;
-	root.rc = &t3;
-	t2.lc = &t4;
-	t2.rc = &t5;
-	t3.rc = &t6;
-	t4.lc = &t7;
-	t4.rc = &t8;
-	t8.lc = &t9;
-
+int main(int agrc, char *agrv[])
+{
+	vector<int> vec = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+	cplusplus::BinTree<int> tree;
+	cplusplus::TreeNode<int> * root = tree.createBinTree(vec);//vec（带有模板参数）作为实参时，不要传迭代器
 	cplusplus::Solution<int> s;
-	cout << "the MaxDepth is: " ;
-	cout << s.calMaxDepth(&root) << endl;
+	cout << (s.IsBalanced(root)? "true" :"false")<< endl;
 	system("pause");
 	return 0;
 }
