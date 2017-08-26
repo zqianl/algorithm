@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 	}
 	PrintMatrixClockwisely(numbers, rows, columns);
 	for (int i = 0; i < rows; ++i)
-		delete numbers[i];
+		delete[] numbers[i];
 	delete[] numbers;
 	system("pause");
 	return 0;
