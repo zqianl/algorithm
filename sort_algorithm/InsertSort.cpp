@@ -2,16 +2,6 @@
 
 using namespace std;
 
-void Swap(int &a, int &b)
-{
-	if (a != b)
-	{
-		a ^= b;
-		b ^= a;
-		a ^= b;
-	}
-}
-
 void InsertSort(int data[], int length)
 {
 	int i, j, k;
