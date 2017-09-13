@@ -1,126 +1,102 @@
-#include<stdio.h>  
-#include<stdlib.h>  
-#include<stdbool.h>  
+#include<iostream>
+#include<vector>
+#include<list>
 
-typedef struct BTNode
-{
-	struct BTNode *lchild;
-	struct BTNode *rchild;
+using namespace std;
+
+struct TreeNode{
 	int data;
-}BTNode, *BTree;
+	TreeNode *lc;
+	TreeNode *rc;
+	TreeNode(int x) :data(x), lc(NULL), rc(NULL){}
+};
 
-/*
-前序遍历找出根节点到数据域为val的节点路径，保存在path数组中,
-这里index是保存到path数组中的元素的下标，*len用来保存路径长度，
-如果能找到val，则返回ture，找不到则返回false
-*/
-bool GetPreTraversePath(BTree pTree, int val, int *path, int index, int *len)
+void ConnectTreeNode(TreeNode *pRoot, TreeNode *lc, TreeNode *rc)
 {
-	if (pTree == NULL)
-	{
-		*len = 0;
-		return false;
-	}
+	if (pRoot == NULL)
+		return;
+	if (lc != NULL)
+		pRoot->lc = lc;
+	if (rc != NULL)
+		pRoot->rc = rc;
+}
 
-	path[index] = pTree->data;
-	if (pTree->data == val)
-	{
-		*len = index + 1;
+void Destory(TreeNode *pRoot)
+{
+	if (pRoot == NULL)
+		return;
+	if (pRoot->lc != NULL)
+		Destory(pRoot->lc);
+	if (pRoot->rc != NULL)
+		Destory(pRoot->rc);
+	delete pRoot;
+	pRoot = NULL;
+}
+
+bool GetNodePath(TreeNode *pRoot, TreeNode *pNode, list<TreeNode *>&path)
+{
+	if (pRoot == pNode)
 		return true;
+	path.push_back(pRoot);
+	bool found = false;
+	if (pRoot->lc != NULL)
+		found = GetNodePath(pRoot->lc, pNode, path);
+	if (pRoot->rc != NULL && !found)
+		found = GetNodePath(pRoot->rc, pNode, path);
+	if (!found)
+		path.pop_back();
+	return found;
+}
+
+TreeNode *GetLastCommonNode(list<TreeNode *> &path1, list<TreeNode *> &path2)
+{
+	list<TreeNode *>::iterator iterPath1 = path1.begin();
+	list<TreeNode *>::iterator iterPath2 = path2.begin();
+	TreeNode *lastCommonNode = NULL;
+	while (iterPath1 != path1.end() && iterPath2 != path2.end() && *iterPath1 == *iterPath2)
+	{
+		lastCommonNode = *iterPath1;
+		iterPath1++;
+		iterPath2++;
 	}
+	return lastCommonNode;
+}
+
+TreeNode *GetLastCommonParent(TreeNode *pRoot, TreeNode *pNode1, TreeNode *pNode2)
+{
+	if (pRoot == NULL || pNode1 == NULL || pNode2 == NULL)
+		return NULL;
+	list<TreeNode *>path1;
+	GetNodePath(pRoot, pNode1, path1);
+	list<TreeNode *>path2;
+	GetNodePath(pRoot, pNode2, path2);
+	return GetLastCommonNode(path1, path2);
+}
+
+void Test1()
+{
+	vector<int>vec = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	vector<TreeNode *>vecTreeNode;
+	for (unsigned int i = 0; i < vec.size(); ++i)
+	{
+		vecTreeNode.push_back(new TreeNode(vec[i]));
+	}
+	ConnectTreeNode(vecTreeNode[0], vecTreeNode[1], vecTreeNode[2]);
+	ConnectTreeNode(vecTreeNode[1], vecTreeNode[3], vecTreeNode[4]);
+	ConnectTreeNode(vecTreeNode[2], vecTreeNode[5], vecTreeNode[6]);
+	ConnectTreeNode(vecTreeNode[3], vecTreeNode[7], NULL);
+	ConnectTreeNode(vecTreeNode[4], vecTreeNode[8], NULL);
+	TreeNode *result = GetLastCommonParent(vecTreeNode[0], vecTreeNode[7], vecTreeNode[8]);
+	if (result == vecTreeNode[1])
+		cout << "true!" << endl;
 	else
-	{
-		bool can;
-		can = GetPreTraversePath(pTree->lchild, val, path, index + 1, len);
-		if (!can)
-			can = GetPreTraversePath(pTree->rchild, val, path, index + 1, len);
-		return can;
-	}
+		cout << "false!" << endl;
+	Destory(vecTreeNode[0]);
 }
 
-/*
-获取两个路径的最后一个公共节点,
-由于对树的先序遍历的结果中，前面一定有些节点相同，因此一定能找到最后一个相同节点
-*/
-int GetFirstCommonNode(int *path1, int len1, int *path2, int len2)
+int main(int argc, char **argv)
 {
-	int shortLen = len1<len2 ? len1 : len2;
-	int i;
-	for (i = 0; i<shortLen; i++)
-	{
-		if (path1[i] != path2[i])
-			break;
-	}
-	return path1[i - 1];
-}
-
-/*
-根据先序遍历序列创建二叉树，由于可能改变根节点的指向，因此传入BTNode的二级指针
-*/
-void CreateBTree(BTree *pRoot)
-{
-	int data;
-	scanf("%d", &data);
-	if (data == 0)
-		*pRoot = NULL;
-	else
-	{
-		*pRoot = (BTree)malloc(sizeof(BTNode));
-		if (*pRoot == NULL)
-			exit(EXIT_FAILURE);
-		(*pRoot)->data = data;
-		(*pRoot)->lchild = NULL;
-		(*pRoot)->rchild = NULL;
-		CreateBTree(&((*pRoot)->lchild));
-		CreateBTree(&((*pRoot)->rchild));
-	}
-}
-
-/*
-销毁二叉树
-*/
-void DestroyBTree(BTree pRoot)
-{
-	if (pRoot != NULL)
-	{
-		if (pRoot->lchild != NULL)
-			DestroyBTree(pRoot->lchild);
-		if (pRoot->rchild != NULL)
-			DestroyBTree(pRoot->rchild);
-		free(pRoot);
-		pRoot = NULL;
-	}
-}
-
-
-int main()
-{
-	int path1[10000];
-	int path2[10000];
-
-	int n;
-	while (scanf("%d", &n) != EOF)
-	{
-		int i;
-		for (i = 0; i<n; i++)
-		{
-			BTree pRoot = NULL;
-			CreateBTree(&pRoot);
-
-			int val1, val2;
-			scanf("%d %d", &val1, &val2);
-
-			int len1, len2;
-			bool can1 = GetPreTraversePath(pRoot, val1, path1, 0, &len1);
-			bool can2 = GetPreTraversePath(pRoot, val2, path2, 0, &len2);
-
-			if (can1 && can2)
-				printf("%d\n", GetFirstCommonNode(path1, len1, path2, len2));
-			else
-				printf("My God\n");
-
-			DestroyBTree(pRoot);
-		}
-	}
+	Test1();
+	system("pause");
 	return 0;
 }
