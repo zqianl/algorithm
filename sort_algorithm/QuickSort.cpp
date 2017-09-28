@@ -54,7 +54,7 @@ void QuickSort(int data[], int length, int start, int end)
 int main(int argc, char **argv)
 {
 	int data[10] = { 3, 2, 5, 6, 4, 1, 9, 7, 8, 0 };
-	QuickSort(data,10,-1,9);
+	QuickSort(data,10,0,9);
 	for (int i = 0; i < 10; ++i)
 		cout << data[i] << " ";
 	system("pause");
